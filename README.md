@@ -1,6 +1,6 @@
 # Restrict Content Pro - CSV User Import
 
-A plugin for importing a CSV of user accounts into Restrict Content Pro
+A plugin for importing a CSV of user accounts into Restrict Content Pro.
 
 ## Description
 
