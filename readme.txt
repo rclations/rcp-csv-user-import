@@ -5,7 +5,7 @@ Author: Pippin Williamson
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: Restrict Content Pro, premium content, memberships, subscriptions, csv, user import, csv to users, Pippin Williamson, Pippin's Plugins
 Requires at least 3.3
-Tested up to 4.3
+Tested up to 4.5
 Stable tag: 1.1.3
 
 A plugin for importing a CSV of user accounts into Restrict Content Pro
@@ -14,7 +14,7 @@ A plugin for importing a CSV of user accounts into Restrict Content Pro
 
 This plugin is an add-on for [Restrict Content Pro](http://pippinsplugins.com/restrict-content-pro-premium-content-plugin/), a complete subscription and premium content manager plugin for WordPress.
 
-Once activated, this plugin will provide a new menu item under the Restrict menu called "CSV Import".
+Once activated, this plugin will provide a new menu item under the Restrict menu called **CSV Import**.
 
 In order to import correctly, you must preformat your CSV to match the requirements of the plugin. You CSV should have the following columns:
 
