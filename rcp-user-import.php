@@ -102,9 +102,9 @@ function rcp_csvui_process_csv() {
 		}
 
 		$csv = new parseCSV( $import_file );
-		
+
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
-		
+
 		if( ! $subscription_id ) {
 			wp_die( __('Please select a subscription level.', 'rcp_csvui' ), __('Error') );
 		}
@@ -118,25 +118,20 @@ function rcp_csvui_process_csv() {
 		$status     = isset( $_POST['rcp_status'] ) ? sanitize_text_field( $_POST['rcp_status'] ) : 'free';
 		$expiration = isset( $_POST['rcp_expiration'] ) ? sanitize_text_field( $_POST['rcp_expiration'] ) : false;
 
-		if( ! $expiration || strlen( trim( $expiration ) ) <= 0 ) {
-			// calculate expiration here
-			$expiration = rcp_calculate_subscription_expiration( $subscription_id );
-		}
-
 		foreach ( $csv->data as $user ) {
 
 			if ( ! empty( $user['id'] ) ) {
 
 				$user_data = get_userdata( $user['id'] );
-			
+
 			} elseif ( ! empty( $user['ID'] ) ) {
 
 				$user_data = get_userdata( $user['ID'] );
-			
+
 			} else {
 
 				$user_data = get_user_by( 'email', $user['user_email'] );
-	
+
 			}
 
 			if( ! $user_data ) {
@@ -161,12 +156,44 @@ function rcp_csvui_process_csv() {
 				$email   = $user_data->user_email;
 			}
 
-            update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
-            rcp_set_expiration_date( $user_id, $expiration );
-            rcp_set_status( $user_id, $status );
+			$member = new RCP_Member( $user_id );
 
-            do_action( 'rcp_user_import_user_added', $user_id, $user_data, $subscription_id, $status, $expiration );
+			update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
+
+			if ( ! empty( $user['recurring'] ) && in_array( $user['recurring'], array( '1', 'yes' ) ) ) {
+				$member->set_recurring( true );
+			}
+
+			/**
+			 * If the expiration date wasn't specified on the import screen,
+			 * check the CSV file. If no expiration in the CSV file, calculate
+			 * the expiration date based on the subscription level.
+			 */
+			if( ! $expiration || strlen( trim( $expiration ) ) <= 0 ) {
+
+				if ( ! empty( $user['expiration'] ) ) {
+					$expiration = $user['expiration'];
+				} else {
+					// calculate expiration here
+					$expiration = rcp_calculate_subscription_expiration( $subscription_id );
+				}
+			}
+
+			$member->set_expiration_date( $expiration );
+
+			if ( ! empty( $user['payment_profile_id'] ) ) {
+				$member->set_payment_profile_id( $user['payment_profile_id'] );
+			}
+
+			if ( ! empty( $user['subscription_key'] ) ) {
+				update_user_meta( $user_id, 'rcp_subscription_key', $user['subscription_key'] );
+			}
+
+			$member->set_status( $status );
+
+			do_action( 'rcp_user_import_user_added', $user_id, $user_data, $subscription_id, $status, $expiration );
 		}
+
 		wp_redirect( admin_url( '/admin.php?page=rcp-csv-import&rcp-message=users-imported' ) ); exit;
 	}
 }
