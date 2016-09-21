@@ -101,7 +101,9 @@ function rcp_csvui_process_csv() {
 			wp_die( __('Please upload a CSV file.', 'rcp_csvui' ), __('Error') );
 		}
 
-		$csv = new parseCSV( $import_file );
+		$csv = new parseCSV();
+
+		$csv->parse( $import_file );
 
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 
