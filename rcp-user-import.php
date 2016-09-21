@@ -117,10 +117,11 @@ function rcp_csvui_process_csv() {
 			wp_die( sprintf( __('That subscription level does not exist: #%d.', 'rcp_csvui' ), $subscription_id ), __('Error') );
 		}
 
-		$status     = isset( $_POST['rcp_status'] ) ? sanitize_text_field( $_POST['rcp_status'] ) : 'free';
-		$expiration = isset( $_POST['rcp_expiration'] ) ? sanitize_text_field( $_POST['rcp_expiration'] ) : false;
+		$status = isset( $_POST['rcp_status'] ) ? sanitize_text_field( $_POST['rcp_status'] ) : 'free';
 
 		foreach ( $csv->data as $user ) {
+
+			$expiration = ! empty( $_POST['rcp_expiration'] ) ? sanitize_text_field( $_POST['rcp_expiration'] ) : false;
 
 			if ( ! empty( $user['id'] ) ) {
 
@@ -175,6 +176,7 @@ function rcp_csvui_process_csv() {
 
 				if ( ! empty( $user['expiration'] ) ) {
 					$expiration = $user['expiration'];
+
 				} else {
 					// calculate expiration here
 					$expiration = rcp_calculate_subscription_expiration( $subscription_id );
