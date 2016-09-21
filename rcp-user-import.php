@@ -139,7 +139,7 @@ function rcp_csvui_process_csv() {
 			if( ! $user_data ) {
 
 				$email      = $user['user_email'];
-				$password   = wp_generate_password();
+				$password   = ! empty( $user['user_password'] ) ? $user['user_password'] : wp_generate_password();
 				$user_login = ! empty( $user['user_login'] ) ? $user['user_login'] : $user['user_email'];
 
 				$user_data  = array(
