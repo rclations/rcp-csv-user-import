@@ -1,13 +1,13 @@
 <?php
-/*
-Plugin Name: Restrict Content Pro - CSV User Import
-Plugin URL: https://restrictcontentpro.com/downloads/csv-user-import/
-Description: Allows you to import a CSV of users into Restrict Content Pro
-Version: 1.1.4
-Author: Pippin Williamson
-Author URI: https://pippinsplugins.com
-Contributors: mordauk, chriscoyier, mindctrl
-*/
+/**
+ * Plugin Name: Restrict Content Pro - CSV User Import
+ * Plugin URL: https://restrictcontentpro.com/downloads/csv-user-import/
+ * Description: Allows you to import a CSV of users into Restrict Content Pro
+ * Version: 1.1.4
+ * Author: Pippin Williamson
+ * Author URI: https://pippinsplugins.com
+ * Contributors: mordauk, chriscoyier, mindctrl
+ */
 
 if(!defined('RCP_CSVUI_PLUGIN_DIR')) {
 	define('RCP_CSVUI_PLUGIN_DIR', dirname(__FILE__));
@@ -15,12 +15,22 @@ if(!defined('RCP_CSVUI_PLUGIN_DIR')) {
 
 ini_set('max_execution_time', 90);
 
+/**
+ * Create admin sub-menu page for CSV Import
+ *
+ * @return void
+ */
 function rcp_csvui_menu_page() {
 	global $rcp_csvui_import_page;
 	$rcp_csvui_import_page = add_submenu_page('rcp-members', __('CSV Import', 'rcp_csvui'), __('CSV Import', 'rcp_csvui'), 'manage_options', 'rcp-csv-import', 'rcp_csvui_purchase_import');
 }
 add_action('admin_menu', 'rcp_csvui_menu_page', 100);
 
+/**
+ * Render the CSV Import page
+ *
+ * @return void
+ */
 function rcp_csvui_purchase_import() {
 	?>
 	<div class="wrap">
@@ -82,6 +92,11 @@ function rcp_csvui_purchase_import() {
 	<?php
 }
 
+/**
+ * Process CSV import
+ *
+ * @return void
+ */
 function rcp_csvui_process_csv() {
 
 	if( isset( $_POST['rcp_action'] ) && $_POST['rcp_action'] == 'process_csv_import' ) {
@@ -156,7 +171,6 @@ function rcp_csvui_process_csv() {
 
 			} else {
 				$user_id = $user_data->ID;
-				$email   = $user_data->user_email;
 			}
 
 			$member = new RCP_Member( $user_id );
@@ -203,6 +217,11 @@ function rcp_csvui_process_csv() {
 }
 add_action('admin_init', 'rcp_csvui_process_csv');
 
+/**
+ * Display admin notice after a successful import
+ *
+ * @return void
+ */
 function rcp_csvui_notices() {
 	if( isset( $_GET['rcp-message'] ) && $_GET['rcp-message'] == 'users-imported' ) {
 		add_settings_error( 'rcp-csv-ui', 'imported', __('All users have been imported.', 'rcp_csvui'), 'updated' );
@@ -210,18 +229,36 @@ function rcp_csvui_notices() {
 }
 add_action('admin_notices', 'rcp_csvui_notices' );
 
+/**
+ * Load admin scripts on the import page
+ *
+ * @param string $hook Current page
+ *
+ * @return void
+ */
 function rcp_csvui_scripts( $hook ) {
 	global $rcp_csvui_import_page;
-	if( $hook != $rcp_csvui_import_page )
+	if( $hook != $rcp_csvui_import_page ) {
 		return;
+	}
+
 	wp_enqueue_style('datepicker', RCP_PLUGIN_DIR . 'includes/css/datepicker.css');
 	wp_enqueue_script('jquery-ui-datepicker');
 }
 add_action( 'admin_enqueue_scripts', 'rcp_csvui_scripts' );
 
+/**
+ * Convert CSV to array
+ *
+ * @param string $filename Path to the file.
+ * @param string $delimiter Delimeter.
+ *
+ * @return array|bool
+ */
 function rcp_csvui_csv_to_array( $filename = '', $delimiter = ',') {
-	if(!file_exists($filename) || !is_readable($filename))
-		return FALSE;
+	if(!file_exists($filename) || !is_readable($filename)) {
+		return false;
+	}
 
 	$header = NULL;
 	$data = array();
