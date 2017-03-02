@@ -214,7 +214,7 @@ function rcp_csvui_scripts( $hook ) {
 	global $rcp_csvui_import_page;
 	if( $hook != $rcp_csvui_import_page )
 		return;
-	wp_enqueue_style('datepicker', RCP_PLUGIN_DIR . 'includes/css/datepicker.css');
+	wp_enqueue_style('datepicker', RCP_PLUGIN_URL . 'includes/css/datepicker.css');
 	wp_enqueue_script('jquery-ui-datepicker');
 }
 add_action( 'admin_enqueue_scripts', 'rcp_csvui_scripts' );
