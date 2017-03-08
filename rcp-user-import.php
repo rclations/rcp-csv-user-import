@@ -209,7 +209,7 @@ function rcp_csvui_process_csv() {
 
 			$member->set_status( $status );
 
-			do_action( 'rcp_user_import_user_added', $user_id, $user_data, $subscription_id, $status, $expiration );
+			do_action( 'rcp_user_import_user_added', $user_id, $user_data, $subscription_id, $status, $expiration, $user );
 		}
 
 		wp_redirect( admin_url( '/admin.php?page=rcp-csv-import&rcp-message=users-imported' ) ); exit;
