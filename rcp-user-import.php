@@ -9,11 +9,11 @@
  * Contributors: mordauk, chriscoyier, mindctrl
  */
 
-if(!defined('RCP_CSVUI_PLUGIN_DIR')) {
-	define('RCP_CSVUI_PLUGIN_DIR', dirname(__FILE__));
+if ( ! defined( 'RCP_CSVUI_PLUGIN_DIR' ) ) {
+	define( 'RCP_CSVUI_PLUGIN_DIR', dirname( __FILE__ ) );
 }
 
-ini_set('max_execution_time', 90);
+ini_set( 'max_execution_time', 90 );
 
 /**
  * Create admin sub-menu page for CSV Import
@@ -22,9 +22,9 @@ ini_set('max_execution_time', 90);
  */
 function rcp_csvui_menu_page() {
 	global $rcp_csvui_import_page;
-	$rcp_csvui_import_page = add_submenu_page('rcp-members', __('CSV Import', 'rcp_csvui'), __('CSV Import', 'rcp_csvui'), 'manage_options', 'rcp-csv-import', 'rcp_csvui_purchase_import');
+	$rcp_csvui_import_page = add_submenu_page( 'rcp-members', __( 'CSV Import', 'rcp_csvui' ), __( 'CSV Import', 'rcp_csvui' ), 'manage_options', 'rcp-csv-import', 'rcp_csvui_purchase_import' );
 }
-add_action('admin_menu', 'rcp_csvui_menu_page', 100);
+add_action( 'admin_menu', 'rcp_csvui_menu_page', 100 );
 
 /**
  * Render the CSV Import page
@@ -34,59 +34,59 @@ add_action('admin_menu', 'rcp_csvui_menu_page', 100);
 function rcp_csvui_purchase_import() {
 	?>
 	<div class="wrap">
-		<h2><?php _e('CSV User Import', 'rcp_csvui'); ?></h2>
+		<h2><?php _e( 'CSV User Import', 'rcp_csvui' ); ?></h2>
 		<?php settings_errors( 'rcp-csv-ui' ); ?>
-		<P><?php _e('Use this tool to import user memberships into Restrict Content Pro', 'rcp_csvui'); ?></p>
-		<p><?php _e('<strong>Note</strong>: your CSV should contain the following fields: <em>user_email, first_name, last_name, user_login</em>. If you wish to update existing users, you can include a <em>ID</em> field as well.', 'rcp_csvui' ); ?></p>
+		<P><?php _e( 'Use this tool to import user memberships into Restrict Content Pro', 'rcp_csvui' ); ?></p>
+		<p><?php _e( '<strong>Note</strong>: your CSV should contain the following fields: <em>user_email, first_name, last_name, user_login</em>. If you wish to update existing users, you can include a <em>ID</em> field as well.', 'rcp_csvui' ); ?></p>
 		<script type="text/javascript">jQuery(document).ready(function($) { var dateFormat = 'yy-mm-dd'; $('.rcp_datepicker').datepicker({dateFormat: dateFormat}); });</script>
 		<form id="rcp_csvui_import" enctype="multipart/form-data" method="post">
 			<table class="form-table">
 				<tr>
-					<th><?php _e('CSV File', 'rcp_csvui'); ?></th>
+					<th><?php _e( 'CSV File', 'rcp_csvui' ); ?></th>
 					<td>
 						<input type="file" name="rcp_csvui_file"/>
-						<div class="description"><?php _e('Select the CSV file to import. Must follow guidelines above.', 'rcp_csvui'); ?></div>
+						<div class="description"><?php _e( 'Select the CSV file to import. Must follow guidelines above.', 'rcp_csvui' ); ?></div>
 					</td>
 				</tr>
 				<tr>
-					<th><?php _e('Subscription Level', 'rcp_csv_ui'); ?></th>
+					<th><?php _e( 'Subscription Level', 'rcp_csv_ui' ); ?></th>
 					<td>
 						<select name="rcp_level" id="rcp_level">
 						<?php
 						$subscription_levels = rcp_get_subscription_levels();
-						foreach( $subscription_levels as $level ) {
+						foreach ( $subscription_levels as $level ) {
 							echo '<option value="' . esc_attr( absint( $level->id ) ) . '">' . esc_html( $level->name ) . '</option>';
 						}
 						?>
 						</select>
-						<div class="description"><?php _e('Select the subscription level to add users to.', 'rcp_csvui'); ?></div>
+						<div class="description"><?php _e( 'Select the subscription level to add users to.', 'rcp_csvui' ); ?></div>
 					</td>
 				</tr>
 				<tr>
 					<th><?php _e('Status', 'rcp_csv_ui'); ?></th>
 					<td>
 						<select name="rcp_status" id="rcp_status">
-							<option value="active"><?php _e('Active', 'rcp_csvui'); ?></option>
-							<option value="pending"><?php _e('Pending', 'rcp_csvui'); ?></option>
-							<option value="cancelled"><?php _e('Cancelled', 'rcp_csvui'); ?></option>
-							<option value="expired"><?php _e('Expired', 'rcp_csvui'); ?></option>
-							<option value="free"><?php _e('Free', 'rcp_csvui'); ?></option>
+							<option value="active"><?php _e( 'Active', 'rcp_csvui' ); ?></option>
+							<option value="pending"><?php _e( 'Pending', 'rcp_csvui' ); ?></option>
+							<option value="cancelled"><?php _e( 'Cancelled', 'rcp_csvui' ); ?></option>
+							<option value="expired"><?php _e( 'Expired', 'rcp_csvui' ); ?></option>
+							<option value="free"><?php _e( 'Free', 'rcp_csvui' ); ?></option>
 						</select>
-						<div class="description"><?php _e('Select the subscription status to import users with.', 'rcp_csvui'); ?></div>
+						<div class="description"><?php _e( 'Select the subscription status to import users with.', 'rcp_csvui' ); ?></div>
 					</td>
 				</tr>
 				<tr>
-					<th><?php _e('Expiration', 'rcp_csv_ui'); ?></th>
+					<th><?php _e( 'Expiration', 'rcp_csv_ui' ); ?></th>
 					<td>
 						<input type="text" name="rcp_expiration" id="rcp_expiration" value="" class="rcp_datepicker"/>
-						<div class="description"><?php _e('Select the expiration date for all users. Leave this blank and the expiration date will be automatically calculated based on the selected subscription.', 'rcp_csvui'); ?></div>
+						<div class="description"><?php _e( 'Select the expiration date for all users. Leave this blank and the expiration date will be automatically calculated based on the selected subscription.', 'rcp_csvui' ); ?></div>
 					</td>
 				</tr>
 
 			</table>
 			<input type="hidden" name="rcp_action" value="process_csv_import"/>
-			<?php wp_nonce_field('rcp_csvui_nonce', 'rcp_csvui_nonce'); ?>
-			<?php submit_button( __('Upload and Import', 'rcp_csvui') ); ?>
+			<?php wp_nonce_field( 'rcp_csvui_nonce', 'rcp_csvui_nonce' ); ?>
+			<?php submit_button( __( 'Upload and Import', 'rcp_csvui' ) ); ?>
 		</form>
 	</div>
 	<?php
@@ -99,20 +99,20 @@ function rcp_csvui_purchase_import() {
  */
 function rcp_csvui_process_csv() {
 
-	if( isset( $_POST['rcp_action'] ) && $_POST['rcp_action'] == 'process_csv_import' ) {
+	if ( isset( $_POST['rcp_action'] ) && $_POST['rcp_action'] == 'process_csv_import' ) {
 
-		if( ! wp_verify_nonce( $_POST['rcp_csvui_nonce'], 'rcp_csvui_nonce' ) ) {
+		if ( ! wp_verify_nonce( $_POST['rcp_csvui_nonce'], 'rcp_csvui_nonce' ) ) {
 			return;
 		}
 
-		if( ! class_exists( 'parseCSV' ) ) {
+		if ( ! class_exists( 'parseCSV' ) ) {
 
 			require_once dirname( __FILE__ ) . '/parsecsv.lib.php';
 		}
 
 		$import_file = ! empty( $_FILES['rcp_csvui_file'] ) ? $_FILES['rcp_csvui_file']['tmp_name'] : false;
 
-		if( ! $import_file ) {
+		if ( ! $import_file ) {
 			wp_die( __('Please upload a CSV file.', 'rcp_csvui' ), __('Error') );
 		}
 
@@ -122,13 +122,13 @@ function rcp_csvui_process_csv() {
 
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 
-		if( ! $subscription_id ) {
+		if ( ! $subscription_id ) {
 			wp_die( __('Please select a subscription level.', 'rcp_csvui' ), __('Error') );
 		}
 
 		$subscription_details = rcp_get_subscription_details( $subscription_id );
 
-		if( ! $subscription_details ) {
+		if ( ! $subscription_details ) {
 			wp_die( sprintf( __('That subscription level does not exist: #%d.', 'rcp_csvui' ), $subscription_id ), __('Error') );
 		}
 
@@ -152,7 +152,7 @@ function rcp_csvui_process_csv() {
 
 			}
 
-			if( ! $user_data ) {
+			if ( ! $user_data ) {
 
 				$email      = $user['user_email'];
 				$password   = ! empty( $user['user_password'] ) ? $user['user_password'] : wp_generate_password();
@@ -186,7 +186,7 @@ function rcp_csvui_process_csv() {
 			 * check the CSV file. If no expiration in the CSV file, calculate
 			 * the expiration date based on the subscription level.
 			 */
-			if( ! $expiration || strlen( trim( $expiration ) ) <= 0 ) {
+			if ( ! $expiration || strlen( trim( $expiration ) ) <= 0 ) {
 
 				if ( ! empty( $user['expiration'] ) ) {
 					$expiration = $user['expiration'];
@@ -215,7 +215,7 @@ function rcp_csvui_process_csv() {
 		wp_redirect( admin_url( '/admin.php?page=rcp-csv-import&rcp-message=users-imported' ) ); exit;
 	}
 }
-add_action('admin_init', 'rcp_csvui_process_csv');
+add_action( 'admin_init', 'rcp_csvui_process_csv' );
 
 /**
  * Display admin notice after a successful import
@@ -227,7 +227,7 @@ function rcp_csvui_notices() {
 		add_settings_error( 'rcp-csv-ui', 'imported', __('All users have been imported.', 'rcp_csvui'), 'updated' );
 	}
 }
-add_action('admin_notices', 'rcp_csvui_notices' );
+add_action( 'admin_notices', 'rcp_csvui_notices' );
 
 /**
  * Load admin scripts on the import page
@@ -242,8 +242,8 @@ function rcp_csvui_scripts( $hook ) {
 		return;
 	}
 
-	wp_enqueue_style('datepicker', RCP_PLUGIN_URL . 'includes/css/datepicker.css');
-	wp_enqueue_script('jquery-ui-datepicker');
+	wp_enqueue_style( 'datepicker', RCP_PLUGIN_URL . 'includes/css/datepicker.css' );
+	wp_enqueue_script( 'jquery-ui-datepicker' );
 }
 add_action( 'admin_enqueue_scripts', 'rcp_csvui_scripts' );
 
@@ -256,20 +256,21 @@ add_action( 'admin_enqueue_scripts', 'rcp_csvui_scripts' );
  * @return array|bool
  */
 function rcp_csvui_csv_to_array( $filename = '', $delimiter = ',') {
-	if(!file_exists($filename) || !is_readable($filename)) {
+	if ( ! file_exists( $filename ) || ! is_readable( $filename ) ) {
 		return false;
 	}
 
 	$header = NULL;
 	$data = array();
-	if (($handle = fopen($filename, 'r')) !== FALSE) {
-		while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE) {
-			if(!$header)
+	if ( false !== ( $handle = fopen( $filename, 'r' ) ) ) {
+		while ( false !== ( $row = fgetcsv( $handle, 1000, $delimiter ) ) ) {
+			if ( ! $header ) {
 				$header = $row;
-			else
-				$data[] = array_combine($header, $row);
+			} else {
+				$data[] = array_combine( $header, $row );
+			}
 		}
-		fclose($handle);
+		fclose( $handle );
 	}
 	return $data;
 }
