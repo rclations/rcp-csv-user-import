@@ -30,22 +30,22 @@ function rcp_csvui_menu_page() {
 add_action( 'admin_menu', 'rcp_csvui_menu_page', 100 );
 
 function rcp_csvui_menu_page_help_tabs() {
-    $screen = get_current_screen();
-    $screen->add_help_tab( array(
-        'id'      => 'overview',
-        'title'   => 'Overview',
-				'callback' => 'rcp_csvui_help_tab_content_overview',
-    ) );
+	$screen = get_current_screen();
+	$screen->add_help_tab( array(
+		'id'      => 'general',
+		'title'   => 'General',
+		'callback' => 'rcp_csvui_help_tab_content_general',
+	) );
 
-		$screen->add_help_tab( array(
-        'id'      => 'supported-fields',
-        'title'   => 'Supported Fields',
-				'callback' => 'rcp_csvui_help_tab_content_supported_fields',
-    ) );
+	$screen->add_help_tab( array(
+		'id'      => 'supported-fields',
+		'title'   => 'Supported Fields',
+		'callback' => 'rcp_csvui_help_tab_content_supported_fields',
+	) );
 
 }
 
-function rcp_csvui_help_tab_content_overview() {
+function rcp_csvui_help_tab_content_general() {
 	?>
 	<p>Your CSV file should contain the following fields: user_email, first_name, last_name, and user_login. If you want to update existing users, you can include an ID field as well. Optionally, you can import a member's payment profile ID, expiration date, subscription key, recurring status, and user password.</p>
 	<p>The user_email field is the only required field, though we recommend using as many fields as possible so you can better personalize the customer experience. Note, if you leave the user_login field blank, the email address will be used for the login name.</p>
@@ -178,20 +178,17 @@ function rcp_csvui_process_csv() {
 
 		foreach ( $csv->data as $user ) {
 
+			// Normalize key names
+			$user = array_change_key_case( $user, CASE_LOWER );
+
 			$expiration = ! empty( $_POST['rcp_expiration'] ) ? sanitize_text_field( $_POST['rcp_expiration'] ) : false;
 
+
+			// Fetch existing user data
 			if ( ! empty( $user['id'] ) ) {
-
 				$user_data = get_userdata( $user['id'] );
-
-			} elseif ( ! empty( $user['ID'] ) ) {
-
-				$user_data = get_userdata( $user['ID'] );
-
 			} else {
-
 				$user_data = get_user_by( 'email', $user['user_email'] );
-
 			}
 
 			// If user does not exist
